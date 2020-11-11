@@ -9,14 +9,14 @@ mv hostapd.conf /etc/hostapd.conf
 mv interfaces /etc/network/interfaces
 mv grub /etc/default/grub
 
+systemctl enable systemd-networkd
+systemctl unmask hostapd
+systemctl enable hostapd
+
 cd
 ln -s /etc/network/interfaces
 ln -s /etc/hostapd.conf
 ln -s /etc/default/hostapd
-
-systemctl enable systemd-networkd
-systemctl unmask hostapd
-systemctl enable hostapd
 
 update-grub2
 
