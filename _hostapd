@@ -12,20 +12,47 @@ echo "net.ipv4.conf.all.accept_redirects=0" >> /etc/sysctl.conf
 echo "net.ipv4.conf.all.secure_redirects=0" >> /etc/sysctl.conf
 echo "net.ipv4.conf.all.accept_source_route=0" >> /etc/sysctl.conf
 
-mv hostapd /etc/default/hostapd
-mv hostapd.conf /etc/hostapd.conf
-mv interfaces /etc/network/interfaces
-mv grub /etc/default/grub
+echo DAEMON_CONF=\"/etc/hostapd.conf\" > /etc/default/hostapd
 
-systemctl enable systemd-networkd
-systemctl unmask hostapd
-systemctl enable hostapd
+echo interface=wlxc04a001b08e4 > /etc/hostapd.conf
+echo bridge=br0 >> /etc/hostapd.conf
+echo driver=nl80211 >> /etc/hostapd.conf
+echo ssid=teste1 >> /etc/hostapd.conf
+echo channel=11 >> /etc/hostapd.conf
+echo hw_mode=g >> /etc/hostapd.conf
+echo wme_enabled=1 >> /etc/hostapd.conf
+echo macaddr_acl=0 >> /etc/hostapd.conf
+echo auth_algs=1 >> /etc/hostapd.conf
+echo ignore_broadcast_ssid=0 >> /etc/hostapd.conf
+echo wpa=2 >> /etc/hostapd.conf
+echo wpa_passphrase=1234567890 >> /etc/hostapd.conf
+echo wpa_key_mgmt=WPA-PSK >> /etc/hostapd.conf
+echo wpa_pairwise=TKIP >> /etc/hostapd.conf
+echo rsn_pairwise=CCMP >> /etc/hostapd.conf
+
+echo auto lo enp0s8 enp0s3 br0 > /etc/network/interfaces
+echo "" >> /etc/network/interfaces
+echo allow-hotplug enp0s3 enp0s8 >> /etc/network/interfaces
+echo "" >> /etc/network/interfaces
+echo iface lo inet loopback >> /etc/network/interfaces
+echo "" >> /etc/network/interfaces
+echo iface enp0s8 inet dhcp >> /etc/network/interfaces
+echo "" >> /etc/network/interfaces
+echo iface br0 inet dhcp >> /etc/network/interfaces
+echo bridge_ports enp0s3 >> /etc/network/interfaces
+echo bridge_stp off >> /etc/network/interfaces
+echo bridge_fd 0 >> /etc/network/interfaces
+echo bridge_maxwait 0 >> /etc/network/interfaces
+
+echo GRUB_DEFAULT=0 > /etc/default/grub
+echo GRUB_TIMEOUT=0 >> /etc/default/grub
+echo GRUB_DISTRIBUTOR=\`lsb_release -i -s 2\> /dev/null \|\| echo Debian\` >> /etc/default/grub
+echo GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\" >> /etc/default/grub
+echo GRUB_CMDLINE_LINUX=\"\" >> /etc/default/grub
 
 cd
 ln -s /etc/network/interfaces
 ln -s /etc/hostapd.conf
-
-passwd -d root && getent passwd {1000..1001} | awk -F: '{ system("userdel -r " $1) }'
 
 iptables -F
 iptables -P INPUT DROP
@@ -36,8 +63,13 @@ iptables-save > /etc/firewall
 echo "#! /bin/bash" > /etc/network/if-pre-up.d/iptables
 echo "" >> /etc/network/if-pre-up.d/iptables
 echo "iptables-restore < /etc/firewall" >> /etc/network/if-pre-up.d/iptables
-
 chmod +x /etc/network/if-pre-up.d/iptables
+
+passwd -d root && getent passwd {1000..1001} | awk -F: '{ system("userdel -r " $1) }'
+
+systemctl enable systemd-networkd
+systemctl unmask hostapd
+systemctl enable hostapd
 
 update-grub2
 
