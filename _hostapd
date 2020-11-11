@@ -4,6 +4,13 @@ echo enp0s8: \\4{enp0s8} >> /etc/issue
 echo br0: \\4{br0} >> /etc/issue
 echo "" >> /etc/issue
 
+echo "net.ipv4.ip_forward=0" > /etc/sysctl.conf
+echo "net.ipv4.conf.default.rp_filter=1" >> /etc/sysctl.conf
+echo "net.ipv4.conf.all.rp_filter=1" >> /etc/sysctl.conf
+echo "net.ipv4.conf.all.accept_redirects=0" >> /etc/sysctl.conf
+echo "net.ipv4.conf.all.secure_redirects=0" >> /etc/sysctl.conf
+echo "net.ipv4.conf.all.accept_source_route=0" >> /etc/sysctl.conf
+
 mv hostapd /etc/default/hostapd
 mv hostapd.conf /etc/hostapd.conf
 mv interfaces /etc/network/interfaces
