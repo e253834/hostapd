@@ -16,7 +16,6 @@ systemctl enable hostapd
 cd
 ln -s /etc/network/interfaces
 ln -s /etc/hostapd.conf
-ln -s /etc/default/hostapd
 
 update-grub2
 
