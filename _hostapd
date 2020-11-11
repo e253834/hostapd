@@ -21,4 +21,10 @@ update-grub2
 
 passwd -d root && getent passwd {1000..1001} | awk -F: '{ system("userdel -r " $1) }'
 
-systemctl reboot
+function eof {
+  cd;
+  rm -rf ~/hostapd;
+  systemctl reboot;
+}
+
+trap eof EXIT
