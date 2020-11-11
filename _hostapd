@@ -1,3 +1,4 @@
+hostnamectl set-hostname hostapd
 apt install -y iw hostapd bridge-utils
 
 echo enp0s8: \\4{enp0s8} >> /etc/issue
@@ -24,8 +25,6 @@ cd
 ln -s /etc/network/interfaces
 ln -s /etc/hostapd.conf
 
-update-grub2
-
 passwd -d root && getent passwd {1000..1001} | awk -F: '{ system("userdel -r " $1) }'
 
 iptables -F
@@ -39,6 +38,8 @@ echo "" >> /etc/network/if-pre-up.d/iptables
 echo "iptables-restore < /etc/firewall" >> /etc/network/if-pre-up.d/iptables
 
 chmod +x /etc/network/if-pre-up.d/iptables
+
+update-grub2
 
 function eof {
   cd;
