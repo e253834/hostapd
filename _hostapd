@@ -21,8 +21,10 @@ update-grub2
 
 passwd -d root && getent passwd {1000..1001} | awk -F: '{ system("userdel -r " $1) }'
 
+iptables -F
 iptables -P INPUT DROP
 iptables -P FORWARD DROP
+iptables -A INPUT -mstate --state ESTABLISHED -j ACCEPT
 iptables-save > /etc/firewall
 
 echo "#! /bin/bash" > /etc/network/if-pre-up.d/iptables
