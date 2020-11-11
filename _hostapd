@@ -1,0 +1,25 @@
+apt install -y iw hostapd bridge-utils
+
+echo enp0s8: \4{enp0s8} >> /etc/issue
+echo br0: \4{br0} >> /etc/issue
+echo "" >> /etc/issue
+
+mv hostapd /etc/default/hostapd
+mv hostapd.conf /etc/hostapd.conf
+mv interfaces /etc/network/interfaces
+mv grub /etc/default/grub
+
+cd
+ln -s /etc/network/interfaces
+ln -s /etc/hostapd.conf
+ln -s /etc/default/hostapd
+
+systemctl enable systemd-networkd
+systemctl unmask hostapd
+systemctl enable hostapd
+
+update-grub2
+
+passwd -d root && getent passwd {1000..1001} | awk -F: '{ system("userdel -r " $1) }'
+
+systemctl reboot
