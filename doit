@@ -44,16 +44,6 @@ echo bridge_stp off >> /etc/network/interfaces
 echo bridge_fd 0 >> /etc/network/interfaces
 echo bridge_maxwait 0 >> /etc/network/interfaces
 
-echo GRUB_DEFAULT=0 > /etc/default/grub
-echo GRUB_TIMEOUT=0 >> /etc/default/grub
-echo GRUB_DISTRIBUTOR=\`lsb_release -i -s 2\> /dev/null \|\| echo Debian\` >> /etc/default/grub
-echo GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\" >> /etc/default/grub
-echo GRUB_CMDLINE_LINUX=\"\" >> /etc/default/grub
-
-cd
-ln -s /etc/network/interfaces
-ln -s /etc/hostapd.conf
-
 iptables -F
 iptables -P INPUT DROP
 iptables -P FORWARD DROP
@@ -65,13 +55,12 @@ echo "" >> /etc/network/if-pre-up.d/iptables
 echo "iptables-restore < /etc/firewall" >> /etc/network/if-pre-up.d/iptables
 chmod +x /etc/network/if-pre-up.d/iptables
 
-passwd -d root && getent passwd {1000..1001} | awk -F: '{ system("userdel -r " $1) }'
-
 systemctl enable systemd-networkd
 systemctl unmask hostapd
 systemctl enable hostapd
 
-update-grub2
+ln -s /etc/network/interfaces ~/
+ln -s /etc/hostapd.conf ~/
 
 function eof {
   cd;
