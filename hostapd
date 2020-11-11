@@ -1,0 +1,16 @@
+apt update && apt upgrade -y
+nano /etc/default/grub
+update-grub2
+apt install -y iw hostapd bridge-utils 
+
+
+nano /etc/hostapd.conf
+systemctl unmask hostapd
+systemctl enable hostapd
+nano /etc/systemd/network/bridge-br0.netdev
+nano /etc/systemd/network/br0-member-enp0s3.network
+systemctl  enable systemd-networkd
+nano /etc/network/interfaces
+systemctl reboot
+
+
