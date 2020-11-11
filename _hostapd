@@ -1,0 +1,16 @@
+mv hostapd /etc/default/hostapd
+mv hostapd.conf /etc/hostapd.conf
+mv interfaces /etc/network/interfaces
+mv grub /etc/default/grub
+
+update-grub2
+
+apt install -y iw hostapd bridge-utils 
+
+systemctl enable systemd-networkd
+systemctl unmask hostapd
+systemctl enable hostapd
+
+systemctl reboot
+
+
