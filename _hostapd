@@ -1,7 +1,7 @@
 apt install -y iw hostapd bridge-utils
 
-echo enp0s8: \4{enp0s8} >> /etc/issue
-echo br0: \4{br0} >> /etc/issue
+echo enp0s8: \\4{enp0s8} >> /etc/issue
+echo br0: \\4{br0} >> /etc/issue
 echo "" >> /etc/issue
 
 mv hostapd /etc/default/hostapd
